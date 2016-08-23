@@ -54,7 +54,7 @@ public class Interpreter {
             return OPCODE_DONT_EXISTS;
         } else {
             if (opcode.usesData() == false) {
-                return INVALID_INSTRUCTION;
+                return -1;
             }
         }
 
