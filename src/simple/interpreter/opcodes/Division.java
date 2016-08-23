@@ -4,10 +4,14 @@ public class Division implements Opcode {
 
     @Override
     public int exec(int value1, int value2) throws Exception {
+        System.out.print("DIV "+value1+" "+value2);
         if (value2 == 0) {
+            System.out.println(" = illegal DIV by 0");
             throw new Exception();
         }
-        return (value1 / value2);
+        int result = value1 / value2;
+        System.out.println(" = "+result);
+        return result;
     }
 
     @Override

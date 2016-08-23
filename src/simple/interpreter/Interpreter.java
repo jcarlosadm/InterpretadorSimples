@@ -6,17 +6,18 @@ import simple.interpreter.util.StringToInteger;
 
 public class Interpreter {
     
-    static int PC;
-    static int AC;
-    static String instr;
-    static int instr_type;
-    static int data_loc;
-    static String data;
+    static int PC = 0;
+    static int AC = 0;
+    static String instr = "";
+    static int instr_type = 0;
+    static int data_loc = 0;
+    static String data = "";
     static boolean run_bit = true;
 
     public static void interpret(String[] memory, int starting_address) {
 
         PC = starting_address;
+        System.out.println("INIT AC = "+AC);
         while (run_bit && PC < memory.length) {
             instr = memory[PC];
             PC = PC + 1;
@@ -38,7 +39,7 @@ public class Interpreter {
             execute(instr_type, data);
         }
         
-        System.out.println(AC);
+        System.out.println("AC VALUE = "+AC);
     }
 
     private static int get_instr_type(String _inst) {
@@ -68,29 +69,36 @@ public class Interpreter {
         
         int number;
         
-        // opcode uses data
-        if (opcode.usesData() == true) {
-            StringToInteger sInteger = StringToInteger.getInstance();
-            sInteger.setStringValue(_data);
-            
-            try {
+        StringToInteger sInteger = StringToInteger.getInstance();
+        sInteger.setStringValue(_data);
+        
+        try {
+            if (sInteger.isInteger() == true) {
                 number = opcode.exec(AC, sInteger.getIntegerValue());
-            } catch (Exception e) {
-                return;
+            } else {
+                number = opcode.exec(AC, 0);
             }
-            AC = number;
-        
-        // opcode do not uses data
-        } else {
-            try {
-                opcode.exec(0, 0);
-            } catch (Exception e) {
-            }
+            
+        } catch (Exception e) {
+            return;
         }
-        
+        AC = number;
     }
 
     public static void main(String[] args) {
+        /*
+         * Commands:
+         * ADD
+         * SUB
+         * DIV
+         * MUL
+         * DOUBLE
+         * ABS
+         * EXP
+         * INCREMENT
+         * DECREMENT
+         * HALT
+         */
         
         Interpreter.interpret(args, 0);
     }

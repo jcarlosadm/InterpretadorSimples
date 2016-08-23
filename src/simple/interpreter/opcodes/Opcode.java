@@ -8,5 +8,4 @@ public interface Opcode {
     public int exec(int value1, int value2) throws Exception;
     
     public boolean usesData();
-    
 }
