@@ -6,6 +6,8 @@ import simple.interpreter.util.StringToInteger;
 
 public class Interpreter {
     
+    private static final int OPCODE_DONT_EXISTS = -2;
+    private static final int INVALID_INSTRUCTION = -1;
     static int PC = 0;
     static int AC = 0;
     static String instr = "";
@@ -22,7 +24,7 @@ public class Interpreter {
             instr = memory[PC];
             PC = PC + 1;
             instr_type = get_instr_type(instr);
-            if (instr_type == -1) {
+            if (instr_type == INVALID_INSTRUCTION) {
                 continue;
             } else if (instr_type == OpcodeFactory.getHaltCode()) {
                 System.out.println("HALT called");
@@ -30,7 +32,7 @@ public class Interpreter {
             }
             
             data_loc = find_data(instr, instr_type);
-            if (data_loc == -2) {
+            if (data_loc == OPCODE_DONT_EXISTS) {
                 continue;
             }
             else if (data_loc >= 0) {
@@ -50,10 +52,10 @@ public class Interpreter {
         
         Opcode opcode = OpcodeFactory.getOpcode(_type);
         if (opcode == null) {
-            return -2;
+            return OPCODE_DONT_EXISTS;
         } else {
             if (opcode.usesData() == false) {
-                return -1;
+                return INVALID_INSTRUCTION;
             }
         }
         
