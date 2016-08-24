@@ -20,27 +20,34 @@ public class Interpreter {
 
         PC = starting_address;
         System.out.println("INIT AC = " + AC);
+        boolean error = false;
         while (run_bit && PC < memory.length) {
             instr = memory[PC];
             PC = PC + 1;
             instr_type = get_instr_type(instr);
             if (instr_type == INVALID_INSTRUCTION) {
-                continue;
+                System.out.println("ERROR - INVALID INSTRUCTION: " + instr);
+                error = true;
+                break;
             } else if (instr_type == OpcodeFactory.getHaltCode()) {
-                System.out.println("HALT called");
+                System.out.println("HALT");
                 break;
             }
 
             data_loc = find_data(instr, instr_type);
             if (data_loc == OPCODE_DONT_EXISTS) {
-                continue;
+                System.out.println("ERROR - INVALID INSTRUCTION" + instr);
+                error = true;
+                break;
             } else if (data_loc >= 0) {
                 data = memory[data_loc];
             }
             execute(instr_type, data);
         }
 
-        System.out.println("AC VALUE = " + AC);
+        if (!error) {
+            System.out.println("AC VALUE = " + AC);
+        }
     }
 
     private static int get_instr_type(String _inst) {
